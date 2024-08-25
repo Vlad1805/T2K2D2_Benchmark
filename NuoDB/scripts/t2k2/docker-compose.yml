@@ -11,7 +11,8 @@ services:
     volumes:
       - ./tables.sql:/tmp/tables.sql
       - ./csv:/tmp/csv
-      - ./../../TopK_Documents/DB_PostgreSQL_Okapi:/tmp/DB_NuoDB_Okapi
+      - ./../../TopK_Documents/:/tmp/TopK_Documents
+      - ./../../TopK_keywords/:/tmp/TopK_keywords
   sm:
     image: nuodb/nuodb-ce:latest
     hostname: sm
@@ -34,3 +35,7 @@ services:
     - sm
     command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
           "--servers-ready-timeout", "60"]
+    deploy:
+      resources:
+        limits:
+          cpus: "8.0"

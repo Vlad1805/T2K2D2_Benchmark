@@ -28,14 +28,15 @@ allowed_values = [
     "documents_clean1000K.json",
     "documents_clean1500K.json",
     "documents_clean2000K.json",
-    "documents_clean2500K.json"
+    "documents_clean2500K.json",
+    "test.json"
 ]
 
 # Add the argument with restricted choices and make it optional but required
 parser.add_argument(
     "--json_file",
     choices=allowed_values,
-    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json"
+    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json, --test.json"
 )
 
 # Parse the arguments
@@ -86,6 +87,15 @@ elif args.json_file == "documents_clean2500K.json":
     words_csv = f"/tmp/csv/2500K/{words_csv}"
     vocabulary_csv = f"/tmp/csv/2500K/{vocabulary_csv}"
     documents_authors_csv = f"/tmp/csv/2500K/{documents_authors_csv}"
+elif args.json_file == "test.json":
+    print("You selected the test JSON file.")
+    gender_csv = f"/tmp/csv/test/{gender_csv}"
+    author_csv = f"/tmp/csv/test/{author_csv}"
+    geo_location_csv = f"/tmp/csv/test/{geo_location_csv}"
+    documents_csv = f"/tmp/csv/test/{documents_csv}"
+    words_csv = f"/tmp/csv/test/{words_csv}"
+    vocabulary_csv = f"/tmp/csv/test/{vocabulary_csv}"
+    documents_authors_csv = f"/tmp/csv/test/{documents_authors_csv}"
 else:
     print("Invalid JSON file selected.")
     exit()

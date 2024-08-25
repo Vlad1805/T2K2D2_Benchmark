@@ -10,7 +10,33 @@ sql_schema = "tmp/tables.sql"
 container = client.containers.get(container_name)
 
 start_time = time.time()
-sqlcmd_command = f"nuosql --user dba --password goalie hockey --file /tmp/DB_NuoDB_Okapi/Q1_1w_female.sql"
+
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_1w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_1w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_2w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_2w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_3w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q1_3w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_1w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_1w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_2w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_2w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_3w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q2_3w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_1w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_1w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_2w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_2w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_3w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q3_3w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_1w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_1w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_2w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_2w_male.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_3w_female.sql"
+file = "/tmp/TopK_Documents/DB_NuoDB_Okapi/Q4_3w_male.sql"
+
+sqlcmd_command = f"nuosql --user dba --password goalie hockey --timer full --file {file}"
 exec_id = container.client.api.exec_create(container.id, f'/bin/sh -c "{sqlcmd_command}"')
 output = container.client.api.exec_start(exec_id)
 exit_code = container.client.api.exec_inspect(exec_id)['ExitCode']
