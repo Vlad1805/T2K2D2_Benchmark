@@ -1,0 +1,38 @@
+You selected the 500K JSON file.
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/genders.csv --to 'insert into genders values (?,?) ON DUPLICATE KEY UPDATE type=VALUES(type)'
+Execution time for command: 0.05 seconds
+SQL script executed successfully:
+Imported 2 rows, failed 0 rows, size 12 bytes, time 1722883647 sec from /tmp/csv/500K/genders.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/authors.csv --to 'insert into authors values (?,?,?,?,?) ON DUPLICATE KEY UPDATE id_gender=VALUES(id_gender), firstname=VALUES(firstname), lastname=VALUES(lastname), age=VALUES(age)'
+Execution time for command: 58.30 seconds
+SQL script executed successfully:
+Imported 500000 rows, failed 0 rows, size 6064853 bytes, time 1722883705 sec from /tmp/csv/500K/authors.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/documents.csv --to 'insert into documents values (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE id_geo_loc=VALUES(id_geo_loc), raw_text=VALUES(raw_text), lemma_text=VALUES(lemma_text), clean_text=VALUES(clean_text), document_date=VALUES(document_date)'
+Execution time for command: 14.31 seconds
+SQL script executed successfully:
+Imported 500000 rows, failed 0 rows, size 98117845 bytes, time 1722883661 sec from /tmp/csv/500K/documents.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/documents_authors.csv --to 'insert into documents_authors values (?,?) ON DUPLICATE KEY UPDATE id_author=VALUES(id_author), id_document=VALUES(id_document)'
+Execution time for command: 4.94 seconds
+SQL script executed successfully:
+Imported 500000 rows, failed 0 rows, size 13564853 bytes, time 1722883652 sec from /tmp/csv/500K/documents_authors.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/geo_location.csv --to 'insert into geo_location values (?,?,?) ON DUPLICATE KEY UPDATE X=VALUES(X), Y=VALUES(Y)'
+Execution time for command: 0.18 seconds
+SQL script executed successfully:
+Imported 8820 rows, failed 0 rows, size 74889 bytes, time 1722883647 sec from /tmp/csv/500K/geo_location.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/vocabulary.csv --to 'insert into vocabulary values (?,?,?,?) ON DUPLICATE KEY UPDATE count=VALUES(count), tf=VALUES(tf)'
+Execution time for command: 20.63 seconds
+SQL script executed successfully:
+Imported 2279989 rows, failed 0 rows, size 58570266 bytes, time 1722883667 sec from /tmp/csv/500K/vocabulary.csv
+
+Executing: nuoloader hockey --schema user --user dba --password goalie --import /tmp/csv/500K/words.csv --to 'insert into words values (?,?) ON DUPLICATE KEY UPDATE word=VALUES(word)'
+Execution time for command: 1.55 seconds
+SQL script executed successfully:
+Imported 96423 rows, failed 0 rows, size 1167162 bytes, time 1722883648 sec from /tmp/csv/500K/words.csv
+
+Total execution time: 99.97 seconds
+Process completed.

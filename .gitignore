@@ -1,2 +1,3 @@
 venv/
-SetDate
+SetDate/
+*.csv

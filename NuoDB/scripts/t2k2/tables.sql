@@ -40,7 +40,7 @@ CREATE TABLE words (
 
 -- Create vocabulary table
 CREATE TABLE vocabulary (
-    id_document INTEGER,
+    id_document BIGINT,
     id_word INTEGER,
     count INTEGER,
     tf DOUBLE,
@@ -51,8 +51,8 @@ CREATE TABLE vocabulary (
 
 -- Create documents_authors table to handle the relationship between authors and documents
 CREATE TABLE documents_authors (
-    id_author INTEGER,
-    id_document INTEGER,
+    id_author BIGINT,
+    id_document BIGINT,
     PRIMARY KEY (id_author, id_document),
     FOREIGN KEY (id_author) REFERENCES authors(id),
     FOREIGN KEY (id_document) REFERENCES documents(id)

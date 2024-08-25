@@ -1,16 +1,18 @@
 import ijson
 import csv
 from collections import defaultdict
+import argparse
+from datetime import datetime
 
 # File paths (you can adjust these as needed)
-json_file = '../../SetDate/test.json'
-genders_csv = './csv/genders.csv'
-authors_csv = './csv/authors.csv'
-geo_location_csv = './csv/geo_location.csv'
-documents_csv = './csv/documents.csv'
-words_csv = './csv/words.csv'
-vocabulary_csv = './csv/vocabulary.csv'
-documents_authors_csv = './csv/documents_authors.csv'
+json_file = '../../SetDate/'
+genders_csv = 'genders.csv'
+authors_csv = 'authors.csv'
+geo_location_csv = 'geo_location.csv'
+documents_csv = 'documents.csv'
+words_csv = 'words.csv'
+vocabulary_csv = 'vocabulary.csv'
+documents_authors_csv = 'documents_authors.csv'
 
 # Initialize IDs and data structures
 gender_map = {'female': 1, 'male': 2}
@@ -22,6 +24,90 @@ geo_locations = {}
 words = {}
 vocabulary_entries = []
 document_author_entries = []
+
+# Create a parser object
+parser = argparse.ArgumentParser(description="Script to validate a single argument.")
+
+# Define the allowed choices for the argument
+allowed_values = [
+    "documents_clean500K.json",
+    "documents_clean1000K.json",
+    "documents_clean1500K.json",
+    "documents_clean2000K.json",
+    "documents_clean2500K.json"
+]
+
+# Add the argument with restricted choices and make it optional but required
+parser.add_argument(
+    "--json_file",
+    choices=allowed_values,
+    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json"
+)
+
+# Parse the arguments
+args = parser.parse_args()
+
+if args.json_file == "documents_clean500K.json":
+    print("You selected the 500K JSON file.")
+    genders_csv = f"./csv/500K/{genders_csv}"
+    authors_csv = f"./csv/500K/{authors_csv}"
+    geo_location_csv = f"./csv/500K/{geo_location_csv}"
+    documents_csv = f"./csv/500K/{documents_csv}"
+    words_csv = f"./csv/500K/{words_csv}"
+    vocabulary_csv = f"./csv/500K/{vocabulary_csv}"
+    documents_authors_csv = f"./csv/500K/{documents_authors_csv}"
+elif args.json_file == "documents_clean1000K.json":
+    print("You selected the 1000K JSON file.")
+    genders_csv = f"./csv/1000K/{genders_csv}"
+    authors_csv = f"./csv/1000K/{authors_csv}"
+    geo_location_csv = f"./csv/1000K/{geo_location_csv}"
+    documents_csv = f"./csv/1000K/{documents_csv}"
+    words_csv = f"./csv/1000K/{words_csv}"
+    vocabulary_csv = f"./csv/1000K/{vocabulary_csv}"
+    documents_authors_csv = f"./csv/1000K/{documents_authors_csv}"
+elif args.json_file == "documents_clean1500K.json":
+    print("You selected the 1500K JSON file.")
+    genders_csv = f"./csv/1500K/{genders_csv}"
+    authors_csv = f"./csv/1500K/{authors_csv}"
+    geo_location_csv = f"./csv/1500K/{geo_location_csv}"
+    documents_csv = f"./csv/1500K/{documents_csv}"
+    words_csv = f"./csv/1500K/{words_csv}"
+    vocabulary_csv = f"./csv/1500K/{vocabulary_csv}"
+    documents_authors_csv = f"./csv/1500K/{documents_authors_csv}"
+elif args.json_file == "documents_clean2000K.json":
+    print("You selected the 2000K JSON file.")
+    genders_csv = f"./csv/2000K/{genders_csv}"
+    authors_csv = f"./csv/2000K/{authors_csv}"
+    geo_location_csv = f"./csv/2000K/{geo_location_csv}"
+    documents_csv = f"./csv/2000K/{documents_csv}"
+    words_csv = f"./csv/2000K/{words_csv}"
+    vocabulary_csv = f"./csv/2000K/{vocabulary_csv}"
+    documents_authors_csv = f"./csv/2000K/{documents_authors_csv}"
+elif args.json_file == "documents_clean2500K.json":
+    print("You selected the 2500K JSON file.")
+    genders_csv = f"./csv/2500K/{genders_csv}"
+    authors_csv = f"./csv/2500K/{authors_csv}"
+    geo_location_csv = f"./csv/2500K/{geo_location_csv}"
+    documents_csv = f"./csv/2500K/{documents_csv}"
+    words_csv = f"./csv/2500K/{words_csv}"
+    vocabulary_csv = f"./csv/2500K/{vocabulary_csv}"
+    documents_authors_csv = f"./csv/2500K/{documents_authors_csv}"
+else:
+    print("Invalid JSON file selected.")
+    exit()
+
+json_file = f"{json_file}{args.json_file}"
+
+# Function to convert ISO 8601 date format to 'YYYY-MM-DD HH:MM:SS'
+def convert_date_format(date_str):
+    try:
+        # Parse the ISO 8601 date
+        dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        # Return the date in the format 'YYYY-MM-DD HH:MM:SS'
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError as e:
+        print(f"Error converting date: {e}")
+        return None
 
 def extract_author_id(author_field):
     """Extracts the author ID from the JSON entry, handling both $numberLong and direct integer cases."""
@@ -85,7 +171,13 @@ with open(genders_csv, 'w', newline='') as genders_file, \
             raw_text = entry.get('rawText')
             lemma_text = entry.get('lemmaText')
             clean_text = entry.get('cleanText')
-            document_date = entry.get('date', {}).get('$date')
+            # Extract and convert the document date
+            document_date_raw = entry.get('date', {}).get('$date')
+            document_date = convert_date_format(document_date_raw)
+
+            if document_date is None:
+                print(f"Skipping entry due to date conversion error: {entry}")
+                continue
 
             documents_writer.writerow([document_id, geo_locations[geoLocation], raw_text, lemma_text, clean_text, document_date])
 

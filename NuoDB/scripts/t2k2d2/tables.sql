@@ -1,6 +1,6 @@
 -- Create document_dimension table
 CREATE TABLE document_dimension (
-    id INTEGER PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     raw_text TEXT,
     clean_text TEXT,
     lemma_text TEXT
@@ -8,7 +8,7 @@ CREATE TABLE document_dimension (
 
 -- Create author_dimension table
 CREATE TABLE author_dimension (
-    id INTEGER PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     firstname VARCHAR(32),
     lastname VARCHAR(32),
     gender VARCHAR(16),
@@ -41,8 +41,8 @@ CREATE TABLE word_dimension (
 
 -- Create document_fact table
 CREATE TABLE document_fact (
-    id_document INTEGER,
-    id_author INTEGER,
+    id_document BIGINT,
+    id_author BIGINT,
     id_time INTEGER,
     id_location INTEGER,
     id_word INTEGER,

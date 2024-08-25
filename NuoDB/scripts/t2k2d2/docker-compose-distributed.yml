@@ -12,6 +12,7 @@ services:
       - ./tables.sql:/tmp/tables.sql
       - ./csv:/tmp/csv
       - ./../../TopK_Documents/DB_PostgreSQL_Okapi:/tmp/DB_NuoDB_Okapi
+
   sm:
     image: nuodb/nuodb-ce:latest
     hostname: sm
@@ -19,18 +20,43 @@ services:
     environment:
       NUOCMD_API_SERVER: nuoadmin1:8888
     depends_on:
-    - nuoadmin1
+      - nuoadmin1
     command: ["nuodocker", "start", "sm", "--db-name", "hockey", "--server-id", "nuoadmin1",
         "--dba-user", "dba", "--dba-password", "goalie",
         "--servers-ready-timeout", "60"]
-  te:
+
+  te1:
     image: nuodb/nuodb-ce:latest
-    hostname: te
+    hostname: te1
     restart: unless-stopped
     environment:
       NUOCMD_API_SERVER: nuoadmin1:8888
     depends_on:
-    - nuoadmin1
-    - sm
+      - nuoadmin1
+      - sm
+    command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
+          "--servers-ready-timeout", "60"]
+
+  te2:
+    image: nuodb/nuodb-ce:latest
+    hostname: te2
+    restart: unless-stopped
+    environment:
+      NUOCMD_API_SERVER: nuoadmin1:8888
+    depends_on:
+      - nuoadmin1
+      - sm
+    command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
+          "--servers-ready-timeout", "60"]
+
+  te3:
+    image: nuodb/nuodb-ce:latest
+    hostname: te3
+    restart: unless-stopped
+    environment:
+      NUOCMD_API_SERVER: nuoadmin1:8888
+    depends_on:
+      - nuoadmin1
+      - sm
     command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
           "--servers-ready-timeout", "60"]
