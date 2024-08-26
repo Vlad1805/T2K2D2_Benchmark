@@ -27,14 +27,15 @@ allowed_values = [
     "documents_clean1000K.json",
     "documents_clean1500K.json",
     "documents_clean2000K.json",
-    "documents_clean2500K.json"
+    "documents_clean2500K.json",
+    "test.json",
 ]
 
 # Add the argument with restricted choices and make it optional but required
 parser.add_argument(
     "--json_file",
     choices=allowed_values,
-    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json"
+    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json, --test.json"
 )
 
 # Parse the arguments
@@ -80,6 +81,14 @@ elif args.json_file == "documents_clean2500K.json":
     time_dimension_csv = f"/tmp/csv/2500K/{time_dimension_csv}"
     document_fact_csv = f"/tmp/csv/2500K/{document_fact_csv}"
     location_dimension_csv = f"/tmp/csv/2500K/{location_dimension_csv}"
+elif args.json_file == "test.json":
+    print("You selected the test JSON file.")
+    author_dimension_csv = f"/tmp/csv/test/{author_dimension_csv}"
+    document_dimension_csv = f"/tmp/csv/test/{document_dimension_csv}"
+    word_dimension_csv = f"/tmp/csv/test/{word_dimension_csv}"
+    time_dimension_csv = f"/tmp/csv/test/{time_dimension_csv}"
+    document_fact_csv = f"/tmp/csv/test/{document_fact_csv}"
+    location_dimension_csv = f"/tmp/csv/test/{location_dimension_csv}"
 else:
     print("Invalid JSON file selected.")
     exit()
@@ -120,7 +129,7 @@ commands = [
     f"nuoloader hockey --schema user --user dba --password goalie --import {time_dimension_csv} --to 'insert into time_dimension values (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE minute=VALUES(minute), hour=VALUES(hour), day=VALUES(day), month=VALUES(month), year=VALUES(year), full_date=VALUES(full_date)'",
     f"nuoloader hockey --schema user --user dba --password goalie --import {location_dimension_csv} --to 'insert into location_dimension values (?,?,?) ON DUPLICATE KEY UPDATE X=VALUES(X), Y=VALUES(Y)'",
     f"nuoloader hockey --schema user --user dba --password goalie --import {word_dimension_csv} --to 'insert into word_dimension values (?,?) ON DUPLICATE KEY UPDATE word=VALUES(word)'",
-    f"nuoloader hockey --schema user --user dba --password goalie --import {document_fact_csv} --to 'insert into document_fact values (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE count=VALUES(count), tf=VALUES(tf)'",
+    f"nuoloader hockey --schema user --user dba --password goalie --import {document_fact_csv} --to 'insert into document_facts values (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE count=VALUES(count), tf=VALUES(tf)'",
 ]
 
 

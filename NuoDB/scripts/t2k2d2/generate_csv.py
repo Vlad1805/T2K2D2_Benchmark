@@ -37,14 +37,15 @@ allowed_values = [
     "documents_clean1000K.json",
     "documents_clean1500K.json",
     "documents_clean2000K.json",
-    "documents_clean2500K.json"
+    "documents_clean2500K.json",
+    "test.json",
 ]
 
 # Add the argument with restricted choices and make it optional but required
 parser.add_argument(
     "--json_file",
     choices=allowed_values,
-    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json"
+    help="Specify the JSON file to use. Must be one of: --documents_clean500K.json, --documents_clean1000K.json, --documents_clean1500K.json, --documents_clean2000K.json, --documents_clean2500K.json, --test.json"
 )
 
 # Parse the arguments
@@ -90,6 +91,14 @@ elif args.json_file == "documents_clean2500K.json":
     location_dimension_csv = f"./csv/2500K/{location_dimension_csv}"
     word_dimension_csv = f"./csv/2500K/{word_dimension_csv}"
     document_fact_csv = f"./csv/2500K/{document_fact_csv}"
+elif args.json_file == "test.json":
+    print("You selected the test JSON file.")
+    document_dimension_csv = f"./csv/test/{document_dimension_csv}"
+    author_dimension_csv = f"./csv/test/{author_dimension_csv}"
+    time_dimension_csv = f"./csv/test/{time_dimension_csv}"
+    location_dimension_csv = f"./csv/test/{location_dimension_csv}"
+    word_dimension_csv = f"./csv/test/{word_dimension_csv}"
+    document_fact_csv = f"./csv/test/{document_fact_csv}"
 
 json_file = f"{json_file}{args.json_file}"
 

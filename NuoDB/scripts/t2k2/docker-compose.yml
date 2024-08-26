@@ -35,7 +35,3 @@ services:
     - sm
     command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
           "--servers-ready-timeout", "60"]
-    deploy:
-      resources:
-        limits:
-          cpus: "8.0"
