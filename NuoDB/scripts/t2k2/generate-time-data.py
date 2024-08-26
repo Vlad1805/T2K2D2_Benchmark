@@ -74,10 +74,10 @@ file_list = [
 ]
 
 directories = [
-    "./logs/TopK_keywords/OLAP_NuoDB_TFIDF/",
-    "./logs/TopK_keywords/OLAP_NuoDB_Okapi/",
-    "./logs/TopK_Documents/OLAP_NuoDB_TFIDF/",
-    "./logs/TopK_Documents/OLAP_NuoDB_Okapi/"
+    "./logs/TopK_keywords/DB_NuoDB_TFIDF/",
+    "./logs/TopK_keywords/DB_NuoDB_Okapi/",
+    "./logs/TopK_Documents/DB_NuoDB_TFIDF/",
+    "./logs/TopK_Documents/DB_NuoDB_Okapi/"
 ]
 
 for directory in directories:
