@@ -36,6 +36,6 @@ services:
       - nuoadmin1
       - sm
     deploy:
-     replicas: 2
+     replicas: 3
     command: ["nuodocker", "start", "te", "--db-name", "hockey", "--server-id", "nuoadmin1",
           "--servers-ready-timeout", "60"]

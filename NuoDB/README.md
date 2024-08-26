@@ -60,7 +60,7 @@ docker compose up -d
 
 Distributed instance:
 ```
-docker-compose -f docker-compose-distributed.yml down -d
+docker-compose -f docker-compose-distributed.yml up -d
 ```
 
 ## Create the tables
@@ -76,7 +76,7 @@ As the data files are rather big we will use batch inserts to fulfill this task 
 ### First lets generate the csv files using the generate_csv.py script:
 
 ```
-python generate_csv.py --json_file=documents_clean500K
+python generate_csv.py --json_file=documents_clean500K.json
 ```
 
 ```

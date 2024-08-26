@@ -4,7 +4,7 @@ import time
 
 client = docker.from_env()
 
-container_name = "t2k2d2-nuoadmin1-1"
+container_name = "t2k2-nuoadmin1-1"
 sql_schema = "tmp/tables.sql"
 data_set = input("Enter the data set (500K, 1000K, 1500K, 2000K, 2500K): ")
 
