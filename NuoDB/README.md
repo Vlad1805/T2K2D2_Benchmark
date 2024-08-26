@@ -1,66 +1,211 @@
-# NuoDB
+# Setup
 
-NuoDB is an elastic, cloud-native relational database designed to address the needs of modern, distributed applications. Here is a detailed description of NuoDB, covering the specified aspects:
+This projects uses docker for running the database, sql and csv files for creating tables and inserting data, and python scripts for automating this proccesses.
 
-## Database Type and Characteristics
-NuoDB is classified as a NewSQL database, combining the traditional relational database model (ACID compliance, SQL support) with the scalability typically associated with NoSQL databases. It is designed to provide high availability, fault tolerance, and support for distributed computing environments. Key characteristics of NuoDB include:
+First go to the scripts directory:
+```
+cd scripts
+```
+Create a virtual environmet in python:
+```
+python -m venv venv
+```
+Activate the virtual environment:
+```
+.\venv\Scripts\activate
+```
+Install dependencies:
+```
+pip install -r requirements.txt
+```
 
-### Elastic Scalability
- 
-NuoDB can scale out horizontally on-demand by adding more nodes without requiring downtime.
-### Continuous Availability
-The database architecture ensures no single point of failure, allowing for continuous operation even in the case of node failures.
+# Running the benchmarks
 
-### Multi-Tenancy Support
+First download the data set and save it in a directory named SetDate inside the scripts directory.
 
-NuoDB is capable of efficiently managing multiple tenants, making it suitable for SaaS applications.
+## Select the experiment
 
-### SQL Compliance
+```
+cd t2k2
+```
+or
+```
+cd t2k2d2
+```
+## The project structure for t2k2 and t2k2d2 should be:
+```
+├── create-tables.py
+├── csv
+│   ├── 1000K
+│   ├── 1500K
+│   ├── 2000K
+│   ├── 2500K
+│   ├── 500K
+│   └── test
+├── docker-compose-distributed.yml
+├── docker-compose.yml
+├── generate_csv.py
+├── insert-data.py
+├── logs
+├── run-query.py
+└── tables.sql
+```
 
-It supports ANSI SQL, ensuring compatibility with existing SQL-based applications and tools.
+## First create the databse using docker
 
-## Programming Language
-NuoDB is primarily written in Java and C++. The use of these languages allows NuoDB to leverage the object-oriented features and performance capabilities essential for building a robust, high-performance database system.
+Single instance:
+```
+docker compose up -d
+```
 
-## Interrogation Languages
-For accessing and managing data, NuoDB supports the following interrogation languages:
+Distributed instance:
+```
+docker-compose -f docker-compose-distributed.yml down -d
+```
 
-SQL (Structured Query Language): The primary language used for querying and managing data, ensuring that users can perform a wide range of operations such as SELECT, INSERT, UPDATE, DELETE, and more.
-T-SQL (Transact-SQL): Extensions to SQL that include procedural programming, local variables, and various support functions for string processing, date processing, and mathematical computations.
+## Create the tables
 
-## Index Types
-NuoDB supports several types of indexes to optimize query performance and data retrieval:
+```
+python create-tables.py
+```
 
-B-Tree Indexes: Used for general-purpose indexing, providing efficient search, insert, update, and delete operations.
-Hash Indexes: Ideal for equality comparisons, offering fast retrieval times for queries based on specific key values.
-Bitmap Indexes: Useful for indexing columns with a limited number of distinct values, often used in data warehousing scenarios.
-Replication Type
-NuoDB employs an asynchronous replication mechanism, ensuring that data is copied across multiple nodes in the system without introducing significant latency. This type of replication supports eventual consistency, making it possible to achieve high availability and fault tolerance.
+## Insert data
 
-## Distribution Types
+As the data files are rather big we will use batch inserts to fulfill this task in a optimal time using csv files.
 
-NuoDB supports several distribution types to manage data across its distributed architecture:
+### First lets generate the csv files using the generate_csv.py script:
 
-Peer-to-Peer Distribution: Each node in the NuoDB system acts as both a client and a server, facilitating decentralized data distribution and reducing bottlenecks.
-Geographic Distribution: The database can span multiple data centers across different geographic locations, providing low-latency access to data and improving disaster recovery capabilities.
-Sharding: NuoDB can partition data into smaller, manageable pieces (shards) that can be distributed across multiple nodes, enhancing performance and scalability.
-In summary, NuoDB is a modern, cloud-native relational database that offers the scalability and flexibility required for today's distributed applications. Its robust architecture, combined with support for SQL, various index types, and advanced replication and distribution strategies, makes it a powerful solution for enterprises looking to modernize their database infrastructure.
+```
+python generate_csv.py --json_file=documents_clean500K
+```
 
-## Table
+```
+(venv) vstanciu@Vlads-MacBook-Pro-4 t2k2 % python generate_csv.py -h
+usage: generate_csv.py [-h]
+                       [--json_file {documents_clean500K.json,documents_clean1000K.json,documents_clean1500K.json,documents_clean2000K.json,documents_clean2500K.json,test.json}]
+```
 
-DBMS type: 
-Data format: 
-Implementation: java, c++
-Transaction:
-Consistency:
-In-memory:
-Replication:
-Partitioning:
-Ad-hoc queries:
-MapReduce:
-Secondary indices:
-Geospatial indices:
-Text indices:
+### The generated output can be found in the csv directory.
+```
+csv
+├── 1000K
+│   ├── authors.csv
+│   ├── documents.csv
+│   ├── documents_authors.csv
+│   ├── genders.csv
+│   ├── geo_location.csv
+│   ├── vocabulary.csv
+│   └── words.csv
+├── 1500K
+├── 2000K
+├── 2500K
+├── 500K
+└── test
+```
 
+### Now we can insert the data using the insert-data.py script.
 
+```
+python insert-data.py --json_file=documents_clean500K.json
+```
 
+```
+(venv) vstanciu@Vlads-MacBook-Pro-4 t2k2d2 % python insert-data.py -h
+usage: insert-data.py [-h]
+                      [--json_file {documents_clean500K.json,documents_clean1000K.json,documents_clean1500K.json,documents_clean2000K.json,documents_clean2500K.json,test.json}]
+```
+
+## Run a single query
+
+Check the dictionary defined in run-query.py. The script will wait for you to enter a key. 
+
+```
+(venv) vstanciu@Vlads-MacBook-Pro-4 t2k2d2 % python run-query.py
+Enter the ID of the SQL script to execute: 
+```
+
+## Generate time data
+
+```
+python generate-time-data.py
+```
+
+### You should see the output in logs/
+
+```
+logs
+├── TopK_Documents
+│   ├── OLAP_NuoDB_Okapi
+│   │   ├── Q1_1w_female.sql.log
+│   │   ├── Q1_1w_male.sql.log
+│   │   ├── Q1_2w_female.sql.log
+│   │   ├── Q1_2w_male.sql.log
+│   │   ├── Q1_3w_female.sql.log
+│   │   ├── Q1_3w_male.sql.log
+│   │   ├── Q2_1w_female.sql.log
+│   │   ├── Q2_1w_male.sql.log
+│   │   ├── Q2_2w_female.sql.log
+│   │   ├── Q2_2w_male.sql.log
+│   │   ├── Q2_3w_female.sql.log
+│   │   ├── Q2_3w_male.sql.log
+│   │   ├── Q3_1w_female.sql.log
+│   │   ├── Q3_1w_male.sql.log
+│   │   ├── Q3_2w_female.sql.log
+│   │   ├── Q3_2w_male.sql.log
+│   │   ├── Q3_3w_female.sql.log
+│   │   ├── Q3_3w_male.sql.log
+│   │   ├── Q4_1w_female.sql.log
+│   │   ├── Q4_1w_male.sql.log
+│   │   ├── Q4_2w_female.sql.log
+│   │   └── Q4_2w_male.sql.log
+│   └── OLAP_NuoDB_TFIDF
+│       ├── Q1_1w_female.sql.log
+│       ├── Q1_1w_male.sql.log
+│       ├── Q1_2w_female.sql.log
+│       ├── Q1_2w_male.sql.log
+│       ├── Q1_3w_female.sql.log
+│       ├── Q1_3w_male.sql.log
+│       ├── Q2_1w_female.sql.log
+│       ├── Q2_1w_male.sql.log
+│       ├── Q2_2w_female.sql.log
+│       ├── Q2_2w_male.sql.log
+│       ├── Q3_1w_female.sql.log
+│       ├── Q3_1w_male.sql.log
+│       ├── Q3_2w_female.sql.log
+│       ├── Q3_2w_male.sql.log
+│       ├── Q4_1w_female.sql.log
+│       ├── Q4_1w_male.sql.log
+│       ├── Q4_2w_female.sql.log
+│       ├── Q4_2w_male.sql.log
+│       ├── Q4_3w_female.sql.log
+│       └── Q4_3w_male.sql.log
+└── TopK_keywords
+    ├── OLAP_NuoDB_Okapi
+    │   ├── Q1_female.sql.log
+    │   ├── Q1_male.sql.log
+    │   ├── Q2_female.sql.log
+    │   ├── Q2_male.sql.log
+    │   ├── Q3_female.sql.log
+    │   ├── Q3_male.sql.log
+    │   ├── Q4_female.sql.log
+    │   └── Q4_male.sql.log
+    └── OLAP_NuoDB_TFIDF
+        ├── Q1_female.sql.log
+        ├── Q1_male.sql.log
+        ├── Q2_female.sql.log
+        ├── Q2_male.sql.log
+        ├── Q3_female.sql.log
+        ├── Q3_male.sql.log
+        ├── Q4_female.sql.log
+        └── Q4_male.sql.log
+```
+
+Now you may close the containers:
+
+```
+docker compose down
+or
+docker-compose -f docker-compose-distributed.yml down
+```
+
+And repeat the process for the other data sets.
